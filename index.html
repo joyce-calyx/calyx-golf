@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calyx — Golf Tournaments · June 2026</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #ffffff; --bg2: #f7f7f5; --bg3: #f0efe9;
+    --text: #1a1a1a; --text2: #555550; --text3: #888880;
+    --border: rgba(0,0,0,0.1); --border2: rgba(0,0,0,0.18);
+
+    /* Clovr — teal/blue (matching brand) */
+    --clovr: #0033A1; --clovr-light: #DBE6FF; --clovr-dark: #001F60;
+
+    /* Native Roots — forest green */
+    --roots: #1B6B3A; --roots-light: #D9F0E4; --roots-dark: #0F4024;
+
+    --radius: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1a; --bg2: #252523; --bg3: #2e2e2b;
+      --text: #f0efe9; --text2: #b0afa8; --text3: #777770;
+      --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.15);
+      --clovr-light: #0a1a4a; --clovr-dark: #4d7aff;
+      --roots-light: #0b2d1a; --roots-dark: #5dc486;
+    }
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; background: var(--bg3); color: var(--text); min-height: 100vh; padding: 2.5rem 1rem; }
+  .container { max-width: 760px; margin: 0 auto; animation: fadeInUp 0.4s ease both; }
+
+  /* ── Hero ── */
+  .hero { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 2.5rem 2rem 2rem; margin-bottom: 1.5rem; text-align: center; }
+  .logo-wrap { margin-bottom: 1.75rem; }
+  .calyx-logo { height: 52px; width: auto; display: inline-block; }
+  .event-label { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 14px; border-radius: 99px; margin-bottom: 14px; }
+  .label-clovr { background: var(--clovr-light); color: var(--clovr-dark); }
+  .label-roots { background: var(--roots-light); color: var(--roots-dark); }
+  .hero h1 { font-size: 30px; font-weight: 700; color: var(--text); margin-bottom: 10px; letter-spacing: -0.025em; line-height: 1.2; }
+  .hero-copy { font-size: 14px; color: var(--text2); line-height: 1.65; max-width: 460px; margin: 0 auto; }
+
+  /* ── Stat strip ── */
+  .stat-strip { display: flex; gap: 0; margin: 2rem auto 0; max-width: 440px; border: 0.5px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .stat-item { flex: 1; padding: 14px 10px; text-align: center; background: var(--bg2); border-right: 0.5px solid var(--border); }
+  .stat-item:last-child { border-right: none; }
+  .stat-num { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
+  .stat-lbl { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text3); margin-top: 3px; }
+
+  /* ── Tab bar ── */
+  .tab-bar { display: flex; gap: 6px; background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 5px; margin-bottom: 1.5rem; }
+  .tab-btn { flex: 1; padding: 10px 16px; border-radius: 8px; border: none; background: transparent; font-family: inherit; font-size: 14px; font-weight: 500; color: var(--text2); cursor: pointer; transition: all 0.18s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .tab-btn:hover { background: var(--bg2); color: var(--text); }
+  .tab-btn.active-clovr { background: var(--clovr-light); color: var(--clovr-dark); }
+  .tab-btn.active-roots { background: var(--roots-light); color: var(--roots-dark); }
+  .tab-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .dot-clovr { background: var(--clovr); }
+  .dot-roots { background: var(--roots); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; animation: fadeInUp 0.22s ease both; }
+
+  /* ── Section divider ── */
+  .section-divider { display: flex; align-items: center; gap: 10px; margin-bottom: 0.75rem; margin-top: 1.25rem; }
+  .section-divider:first-of-type { margin-top: 0; }
+  .section-divider span { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text3); white-space: nowrap; }
+  .section-divider hr { flex: 1; border: none; border-top: 0.5px solid var(--border); }
+
+  /* ── Info cards ── */
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .info-grid.full { grid-template-columns: 1fr; }
+  .info-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 18px; }
+  .info-card-header { display: flex; align-items: flex-start; gap: 12px; }
+  .info-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .info-icon svg { width: 20px; height: 20px; }
+  .icon-clovr { background: var(--clovr-light); }
+  .icon-clovr svg { fill: var(--clovr-dark); }
+  .icon-roots { background: var(--roots-light); }
+  .icon-roots svg { fill: var(--roots-dark); }
+  .info-card-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text3); margin-bottom: 4px; }
+  .info-card-value { font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.45; }
+  .info-card-sub { font-size: 12px; color: var(--text2); margin-top: 3px; line-height: 1.5; }
+
+  /* ── Sponsorship card ── */
+  .sponsor-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 18px; }
+  .sponsor-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .sponsor-badge { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 700; padding: 6px 14px; border-radius: 99px; }
+  .badge-clovr { background: var(--clovr-light); color: var(--clovr-dark); }
+  .badge-roots { background: var(--roots-light); color: var(--roots-dark); }
+  .badge-dot { width: 9px; height: 9px; border-radius: 50%; }
+  .bdot-clovr { background: var(--clovr); }
+  .bdot-roots { background: var(--roots); }
+  .perks-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .perks-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text2); line-height: 1.5; }
+  .perk-check { width: 18px; height: 18px; border-radius: 5px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .pcheck-clovr { background: var(--clovr-light); }
+  .pcheck-clovr svg { fill: var(--clovr-dark); }
+  .pcheck-roots { background: var(--roots-light); }
+  .pcheck-roots svg { fill: var(--roots-dark); }
+  .perk-check svg { width: 11px; height: 11px; }
+
+  /* ── Team pills ── */
+  .team-section { display: flex; flex-direction: column; gap: 10px; }
+  .team-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .team-row-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text3); min-width: 60px; flex-shrink: 0; }
+  .team-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pill { font-size: 12px; font-weight: 500; padding: 4px 11px; border-radius: 99px; border: 0.5px solid var(--border2); background: var(--bg2); color: var(--text2); }
+  .pill-tbd { font-style: italic; color: var(--text3); }
+
+  .map-link { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; text-decoration: none; margin-top: 6px; }
+  .map-link-clovr { color: var(--clovr); }
+  .map-link-roots { color: var(--roots); }
+  .map-link:hover { text-decoration: underline; }
+  .map-link svg { width: 13px; height: 13px; fill: currentColor; }
+
+  .site-footer { text-align: center; margin-top: 2.5rem; font-size: 12px; color: var(--text3); }
+
+  @media (max-width: 560px) {
+    body { padding: 1.25rem 0.75rem; }
+    .hero { padding: 1.75rem 1.25rem 1.5rem; }
+    .hero h1 { font-size: 24px; }
+    .tab-btn { font-size: 13px; padding: 9px 10px; }
+    .info-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="logo-wrap">
+      <img src="calyx-logo.png" alt="Calyx" class="calyx-logo" />
+    </div>
+    <div class="event-label label-clovr" id="event-label">Bronze Sponsor</div>
+    <h1>Golf Tournaments · June 2026</h1>
+    <p class="hero-copy" id="hero-copy">Calyx is sponsoring two golf tournaments this June. Select a tournament below to view event details, the Calyx team roster, and sponsorship perks.</p>
+
+    <div class="stat-strip">
+      <div class="stat-item">
+        <div class="stat-num">2</div>
+        <div class="stat-lbl">Tournaments</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">2</div>
+        <div class="stat-lbl">States</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">June</div>
+        <div class="stat-lbl">Month</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab bar -->
+  <div class="tab-bar" role="tablist">
+    <button class="tab-btn active-clovr" role="tab" onclick="switchTab('clovr', this)">
+      <span class="tab-dot dot-clovr"></span>
+      Clovr Golf (MO)
+    </button>
+    <button class="tab-btn" role="tab" onclick="switchTab('roots', this)">
+      <span class="tab-dot dot-roots"></span>
+      Native Roots (CO)
+    </button>
+  </div>
+
+  <!-- ═══════════════════════════════ CLOVR ═══════════════════════════════ -->
+  <div class="tab-panel active" id="panel-clovr">
+
+    <div class="section-divider"><span>Event details</span><hr></div>
+    <div class="info-grid">
+
+      <div class="info-card">
+        <div class="info-card-header">
+          <div class="info-icon icon-clovr">
+            <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+          </div>
+          <div>
+            <div class="info-card-label">Date &amp; Time</div>
+            <div class="info-card-value">Monday, June 1st</div>
+            <div class="info-card-sub">5th Annual Clovr Golf Tournament</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-header">
+          <div class="info-icon icon-clovr">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          </div>
+          <div>
+            <div class="info-card-label">Location</div>
+            <div class="info-card-value">The National Golf Club</div>
+            <div class="info-card-sub">6700 N National Drive<br>Parkville, MO 64152</div>
+            <a class="map-link map-link-clovr" href="https://maps.google.com/?q=6700+N+National+Drive+Parkville+MO+64152" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+              Open in Maps
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section-divider"><span>Calyx team</span><hr></div>
+    <div class="info-card">
+      <div class="team-section">
+        <div class="team-row">
+          <div class="team-row-label">Playing</div>
+          <div class="team-pills">
+            <span class="pill">Lance</span>
+            <span class="pill">Kyle</span>
+            <span class="pill">Dave</span>
+            <span class="pill">Jake</span>
+          </div>
+        </div>
+        <div class="team-row">
+          <div class="team-row-label">Table</div>
+          <div class="team-pills">
+            <span class="pill">Owen</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"><span>Sponsorship</span><hr></div>
+    <div class="sponsor-card">
+      <div class="sponsor-header">
+        <div class="sponsor-badge badge-clovr">
+          <span class="badge-dot bdot-clovr"></span>
+          Bronze Sponsor
+        </div>
+      </div>
+      <ul class="perks-list">
+        <li>
+          <div class="perk-check pcheck-clovr"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+          Tent, table or activation presence at registration at clubhouse during breakfast
+        </li>
+        <li>
+          <div class="perk-check pcheck-clovr"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+          Name and logo recognition on all signage and online promotions
+        </li>
+        <li>
+          <div class="perk-check pcheck-clovr"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+          Swag bag insert item
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════ NATIVE ROOTS ═══════════════════════════════ -->
+  <div class="tab-panel" id="panel-roots">
+
+    <div class="section-divider"><span>Event details</span><hr></div>
+    <div class="info-grid">
+
+      <div class="info-card">
+        <div class="info-card-header">
+          <div class="info-icon icon-roots">
+            <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+          </div>
+          <div>
+            <div class="info-card-label">Date &amp; Time</div>
+            <div class="info-card-value">Thursday, June 4th</div>
+            <div class="info-card-sub">Native Roots Charity Golf Tournament</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-header">
+          <div class="info-icon icon-roots">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          </div>
+          <div>
+            <div class="info-card-label">Location</div>
+            <div class="info-card-value">Arrowhead Golf Club</div>
+            <div class="info-card-sub">10850 Sundown Trail<br>Littleton, CO 80125</div>
+            <a class="map-link map-link-roots" href="https://maps.google.com/?q=10850+Sundown+Trail+Littleton+CO+80125" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+              Open in Maps
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section-divider"><span>Calyx team</span><hr></div>
+    <div class="info-card">
+      <div class="team-section">
+        <div class="team-row">
+          <div class="team-row-label">Playing</div>
+          <div class="team-pills">
+            <span class="pill">Dave</span>
+            <span class="pill">Jake</span>
+            <span class="pill">Kyle</span>
+            <span class="pill pill-tbd">TBD — 4th player</span>
+          </div>
+        </div>
+        <div class="team-row">
+          <div class="team-row-label">Hole</div>
+          <div class="team-pills">
+            <span class="pill">Alex</span>
+            <span class="pill">Owen</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"><span>Sponsorship</span><hr></div>
+    <div class="sponsor-card">
+      <div class="sponsor-header">
+        <div class="sponsor-badge badge-roots">
+          <span class="badge-dot bdot-roots"></span>
+          Onyx Sponsor
+        </div>
+      </div>
+      <ul class="perks-list">
+        <li>
+          <div class="perk-check pcheck-roots"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+          Tent on hole to hand out swag and literature — vendor provides tent weights; table and two chairs provided by Arrowhead
+        </li>
+        <li>
+          <div class="perk-check pcheck-roots"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+          Signage on the sponsor hole — tee box sign &amp; pin flag
+        </li>
+        <li>
+          <div class="perk-check pcheck-roots"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+          Logo on website and sponsor banner
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="site-footer">Calyx &middot; Golf Tournaments &middot; June 2026</div>
+</div>
+
+<script>
+const labels = {
+  clovr: { text: 'Bronze Sponsor', cls: 'label-clovr' },
+  roots: { text: 'Onyx Sponsor',   cls: 'label-roots' }
+};
+const copies = {
+  clovr: 'Calyx is a Bronze Sponsor at the 5th Annual Clovr Golf Tournament in Parkville, MO on June 1st. Details, team roster, and perks below.',
+  roots: 'Calyx is an Onyx Sponsor at the Native Roots Charity Golf Tournament in Littleton, CO on June 4th. Details, team roster, and perks below.'
+};
+function switchTab(t, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-clovr','active-roots'));
+  document.getElementById('panel-' + t).classList.add('active');
+  btn.classList.add('active-' + t);
+  const lbl = document.getElementById('event-label');
+  lbl.textContent = labels[t].text;
+  lbl.className = 'event-label ' + labels[t].cls;
+  document.getElementById('hero-copy').textContent = copies[t];
+}
+</script>
+</body>
+</html>
