@@ -106,8 +106,10 @@
   .perk-check svg { width: 11px; height: 11px; }
 
   /* ── Team pills ── */
-  .team-section { display: flex; flex-direction: column; gap: 10px; }
-  .team-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .team-section { display: flex; flex-direction: column; gap: 0; }
+  .team-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 12px 0; border-bottom: 0.5px solid var(--border); }
+  .team-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .team-row:first-child { padding-top: 0; }
   .team-row-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text3); min-width: 60px; flex-shrink: 0; }
   .team-pills { display: flex; flex-wrap: wrap; gap: 6px; }
   .pill { font-size: 12px; font-weight: 500; padding: 4px 11px; border-radius: 99px; border: 0.5px solid var(--border2); background: var(--bg2); color: var(--text2); }
